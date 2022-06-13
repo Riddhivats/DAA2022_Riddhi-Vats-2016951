@@ -1,0 +1,89 @@
+#include<bits/stdc++.h> using namespace std; int dp[100][100];
+int matrixChain(int* p, int i, int j)
+{
+if(i == j)
+{
+return 0;
+}
+if(dp[i][j] != -1)
+{
+return dp[i][j];
+}
+dp[i][j] = INT_MAX;
+for(int k =i;k<j;k++)
+{
+dp[i][j] =min(
+dp[i][j], matrixChain(p,i,k)+matrixChain(p,k+1,j)+p[i-1]*p[k]*p[j]);
+}
+return dp[i][j];
+}
+int MatrixChainOrder(int* p,int n)
+{
+int i=1,j =n-1;
+return matrixChain(p,i,j);
+}
+int main()
+{
+int n; cin>>n; int arr[n];
+for(int i =0;i<n;i++) cin>>arr[i];
+memset(dp, -1,sizeof dp);
+cout<<"Minimum number of multiplications is"<<MatrixChainOrder(arr,n);
+
+}
+
+
+
+
+
+
+#include<bits/stdc++.h>
+using namespace std;
+int count(int ind, int sum, int s[], int n,vector<vector<int> >&dp)
+{
+if(sum == 0) return 1; if(ind>=n || sum<0) return 0;
+if(dp[ind][sum]!= -1) return dp[ind][sum]; int left = count(ind,sum-s[ind],s,n,dp);
+int right = count(ind+1,sum,s,n,dp); return dp[ind][sum] = left +right;
+}
+int main()
+{
+int n ; cin>>n; int s[n];
+for(int i=0;i<n;i++) cin>>s[i];
+int sum; cin>>sum;
+vector<vector<int> >dp(n, vector<int>(sum+1,-1)); cout<<count(0,sum,s,n,dp);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+#include<bits/stdc++.h> using namespace std;
+bool findPartition(int arr[],int n)
+{
+int sum =0; int i,j;
+for(i =0;i<n;i++) sum+= arr[i]; if(sum%2!=0) return false;
+bool part[sum/2+1][n+1]; for(i = 0; i<=n;i++) part[0][i] =true;
+for(i =1;i<=sum/2;i++) part[i][0] =false;
+for(i =1;i<=sum/2;i++)
+{
+for(j=1;j<=n;j++)
+{
+part[i][j] = part[i][j-1]; if(i>=arr[j-1])
+part[i][j] = part[i][j] || part[i-arr[j-1]][j-1];
+}
+}
+return part[sum/2][n];
+}
+int main()
+{
+int n; cin>>n; int arr[n];
+for(int i=0;i<n;i++) cin>>arr[i];
+bool res=findPartition(arr,n); if(res==true) cout<<"Yes"<<endl;
+else cout<<"No";
+}
